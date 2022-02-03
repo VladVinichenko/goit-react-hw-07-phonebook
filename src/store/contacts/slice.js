@@ -1,5 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, isFulfilled } from '@reduxjs/toolkit'
 import { nanoid } from 'nanoid'
+import { addUserAction } from '../action'
 
 const initialStoreFromLocal = () => {
   const contactsLocal = JSON.parse(localStorage.getItem('contacts'))
@@ -9,6 +10,8 @@ const initialStoreFromLocal = () => {
 const initialState = {
   contacts: initialStoreFromLocal(),
   filter: '',
+  loading: false,
+  error: '',
 }
 
 const contactSlice = createSlice({
@@ -40,7 +43,21 @@ const contactSlice = createSlice({
 
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(addUserAction.pending, (state, action) => {
+      state.loading = true
+    })
+    builder.addCase(addUserAction.fulfilled, (state, action) => {
+      state.contacts.push(action.payload)
+      state.loading = false
+    })
+    builder.addCase(addUserAction.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    })
+  },
 })
 
 export const contactReducer = contactSlice.reducer
+
 export const { addContact, deleteContact, filterContacts } = contactSlice.actions
