@@ -1,20 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
+import { addContacts, getContacts, deleteContacts } from "../api/contacts"
 
-const addUserAction = createAsyncThunk(
-  'user/addUser',
-  async (user) => {
-    const response = await userAPI.fetchById(userId)
-    return response.data
-  }
-)
+export const addContactsAction = createAsyncThunk('contacts/addContacts', async contact => {
+  const response = await addContacts(contact);
 
+  return response;
+});
 
+export const deleteContactsAction = createAsyncThunk('contacts/deleteContacts', async id => {
+  const response = await deleteContacts(id);
 
-export const addUserAction = (payload) => (dispatch) => {
-  dispatch(addUserPanding())
-  addUserAction(payload).then((user => {
-    dispatch(addUserSuccess(user))
-  })).catch(() => {
-    dispatch(addUserError(error))
-  })
-}
+  return response;
+});
+
+export const getContactsAction = createAsyncThunk('user/getContacts', async () => {
+  const response = await getContacts();
+
+  return response;
+});

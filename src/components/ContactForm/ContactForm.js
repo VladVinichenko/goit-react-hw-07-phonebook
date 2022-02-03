@@ -1,9 +1,9 @@
 import s from './ContactForm.module.css'
 import Input from '../Input/Input';
 import Button from '../Button/Button'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { addContactsAction, getContactsAction } from '../../store/action';
 
-import { addContact } from '../../store/contacts';
 import { useDispatch } from 'react-redux';
 
 const ContactForm = () => {
@@ -16,11 +16,18 @@ const ContactForm = () => {
     evt.target.name === "number" && setNumber(evt.target.value)
   }
 
+  useEffect(() => {
+    dispatch(getContactsAction());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   const onAddContact = (evt) => {
     evt.preventDefault()
-    dispatch(addContact({
-      name: name, number: number
-    }))
+    dispatch(addContactsAction(
+      {
+        name: name, phone: number,
+      }
+    ))
   }
 
   return (
